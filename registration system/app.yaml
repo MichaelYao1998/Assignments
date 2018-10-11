@@ -1,0 +1,22 @@
+runtime: php55
+api_version: 1
+threadsafe: true
+
+
+handlers:
+- url: /
+  script: login.php
+- url: /(.+\.php)$
+  script: \1
+- url: /(.+\.html)$
+  script: \1
+- url: /stylesheets
+  static_dir: stylesheets 
+  
+env_variables:
+  MYSQL_USER: root
+  MYSQL_PASSWORD: MFys980304
+  MYSQL_DSN: mysql:unix_socket=/cloudsql/s3548974-cc2018:australia-southeast1:cloud;dbname=registration
+  
+beta_settings:
+    cloud_sql_instances: "s3548974-cc2018:australia-southeast1:cloud"
