@@ -1,0 +1,10 @@
+runtime: php55
+api_version: 1
+
+handlers:
+- url: /
+  script: map.html
+- url: /(.+\.html)$
+  script: \1
+- url: /stylesheets
+  static_dir: stylesheets

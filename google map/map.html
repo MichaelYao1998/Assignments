@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Small Google map application</title>
+<link rel="stylesheet" href="stylesheets/style.css">
+</head>
+<body>
+
+<div id="map"></div>
+<script>
+//Zoom stands for zoom level. center is the map central, with the longitute and latitude
+// This center is Melbourne
+//Map has two parameters: center and zoom
+  var map;
+  function initMap(){
+    var lat = parseFloat(document.getElementsByTagName('latitude')[0]);
+    var lng = parseFloat(document.getElementsByTagName('longitute')[0]);
+    map=new google.maps.Map(document.getElementById('map'),{
+      center: {
+               lat: -37.8136,
+               lng: 144.9631
+             },
+      zoom: 8,
+      zoomControl: true
+    });
+  }
+</script>
+<script  async defer
+					src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgAu7Du42CuxlOHcUldVcLl02RqWmLO4A&callback=initMap"></script>
+</body>
+
+</html>
