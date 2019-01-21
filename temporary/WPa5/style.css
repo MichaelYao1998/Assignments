@@ -1,0 +1,144 @@
+.one {
+    text-align: center;
+}
+
+.two {
+    text-align: left;
+}
+
+.seven {
+    display: inline-block;
+}
+
+.three {
+    text-align: right;
+}
+
+.four {
+    color: red;
+    text-align: center;
+}
+
+nav a:link, a:visited {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+nav a:hover, a:active {
+    background-color: #066;
+}
+
+html {
+    background-image: url(checker.gif);
+    background-repeat: repeat;
+    background-position: center;
+}
+
+header,
+nav,
+main,
+footer,
+aside,
+section,
+article {
+    margin: 10px;
+}
+
+header {
+    background-color: hsl(0, 100%, 97%);
+    border: 2px solid hsl(0, 100%, 60%);
+}
+
+body {
+    border: 2px solid green;
+    padding: 30px;
+    margin-top: 0;
+    margin-left: 100px;
+    margin-right: 100px;
+    background-image: url(starburst.gif);
+    background-repeat: repeat;
+    background-position: center;
+    min-width: 600px;
+    max-width: 1200px;
+    box-shadow: 5px 5px 5px #888888;
+}
+
+h1, h2, h3 {
+    font-family: 'Fontdiner Swanky', cursive;
+}
+
+.floating-box {
+    display: inline-block;
+}
+
+nav {
+    text-align: center;
+    font-family: 'Graduate', cursive;
+    font-size: 120%;
+    border: 2px solid hsl(210, 100%, 60%);
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+main {
+    font-family: 'Oregano', cursive;
+    background-color: hsl(120, 100%, 97%);
+    border: 2px solid hsl(120, 100%, 40%);
+    font-size: 120%;
+}
+
+section {
+    background-color: hsl(30, 100%, 97%);
+    border: 2px solid hsl(30, 100%, 60%);
+}
+
+article {
+    background-color: hsl(270, 100%, 97%);
+    border: 2px solid hsl(270, 100%, 60%);
+}
+
+aside {
+    background-color: hsl(180, 100%, 97%);
+    border: 2px solid hsl(180, 100%, 40%);
+    font-size: 120%;
+}
+
+footer {
+    text-align: center;
+    background-color: hsl(300, 100%, 97%);
+    border: 2px solid hsl(300, 100%, 80%);
+    font-size: 130%;
+}
+
+.butt {
+    width: 150px;
+    height: 20px;
+    color: black;
+    position: fixed;
+    right: 3px;
+    bottom: 3px;
+}
+
+#div1:hover {
+    text-align: center;
+}
+
+input[pattern]:invalid {
+    border: 2px solid red;
+}
+
+#map {
+    display: none;
+}
+
+.textWrap {
+    float: left;
+    margin: 10px;
+}
+
+.pump {
+    float: right;
+}
+
+.position {
+    display: inline-block;
+}
