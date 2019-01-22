@@ -42,7 +42,7 @@ unset($_SESSION["cart"]);
     $total += $pump['price'];
     echo "{$pump['id']}" . "<br>";
     echo "{$pump['title']}" . "<br>";
-    echo '$price:' . "{$pump['price']}" . "<br>";;
+    echo 'price:' . "{$pump['price']}" . "<br>";;
 
 } ?>
     <h4>Total</h4>

@@ -1,4 +1,4 @@
-<body onload="prefilled()">
+<body onload="preFilled()">
 
 <header>
     <div align="center">

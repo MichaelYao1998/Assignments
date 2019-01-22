@@ -35,13 +35,13 @@ function storeIfo() {
         window.localStorage.name = document.getElementById('name').value;
         window.localStorage.email = document.getElementById('email').value;
         window.localStorage.address = document.getElementById('address').value;
-        window.localStorage.tel = document.getElementById('tel').value;
-    } else if (document.getElementById('rememberMe').checked !== true) {
+        window.localStorage.telephone = document.getElementById('tel').value;
+    } else {
         window.localStorage.clear();
     }
 }
 
-function prefilled() {
+function preFilled() {
     document.getElementById('name').value = window.localStorage.getItem('name');
     document.getElementById('email').value = window.localStorage.getItem('email');
     document.getElementById('address').value = window.localStorage.getItem('address');
