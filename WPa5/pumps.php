@@ -4,11 +4,13 @@ $emailError = '';
 $nameError = '';
 $addressError = '';
 $telError = '';
+$_SESSION['click'] = 0;
 
 if (isset($_POST["add"])) {
     $pumpId = $_POST["add"];
     if (isset($pumps[$pumpId])) {
         $_SESSION["cart"][$pumpId] = $pumps[$pumpId];
+
     }
 }
 
@@ -55,7 +57,6 @@ if (isset($_POST["checkout"])) {
 
     header("Location: receipt.php");
 }
-
 ?>
 
 <?php include("mid-part.php"); ?>
@@ -63,40 +64,48 @@ if (isset($_POST["checkout"])) {
     <div id=div1>&uarr; Top</div>
 </div>
 <form method='post'>
-
     <?php foreach ($pumps as $pid => $pump) { ?>
-        <?php echo "<div class='position'>";
-        echo " <div class='pump' id='pid'><h3>{$pump['title']}</h3>";
-        echo "{$pump['description']}" . "<br>";
-        echo "{$pump['id']}" . "<br>";
-        echo '$price:' . "{$pump['price']}"; ?>
-
+        <?php
+        if(isset($_POST['add'])){
+            $pump['quantity']++;
+        }
+            echo "<div class='position'>";
+            echo " <div class='pump' id='pid'><h3>{$pump['title']}</h3>";
+            echo "{$pump['description']}" . "<br>";
+            echo "{$pump['id']}" . "<br>";
+            echo 'price: ' . "{$pump['price']}"."&emsp;";
+        ?>
+        <p id="result"></p>
         <?php if (isset($_SESSION["cart"][$pump['id']])) { ?>
-            <button type='submit' name='remove' value=<?php echo "{$pump['id']}"; ?>>Remove from cart</button>
-        <?php } else { ?>
-            <button type='submit' name='add' value=<?php echo "{$pump['id']}"; ?>>Add to cart</button>
-        <?php } ?>
+            <button onclick="addItem()" type='button' name='add to cart' id="add" value=<?php echo "{$pump['id']}"; ?>>Add to cart</button>
+            <button onclick="removeItem()" type='button' name='remove from cart' value=<?php echo "{$pump['id']}"; ?>>Remove from cart</button>
+        <?php } else{?>
+            <button onclick="addItem()" type='submit' name='add' id="add" value=<?php echo "{$pump['id']}"; ?>>Add to cart</button>
+            <button onclick="removeItem()" type='button' name='remove' value=<?php echo "{$pump['id']}"; ?>>Remove from cart</button>
+        <?php }?>
+
         <?php echo "</div>";
         echo "<div class=textWrap>{$pump['image']}";
         echo "</div>";
         echo "</div>";
     } ?>
 
+    <section>
+        <p class="two"><strong>Sorry, but I have no idea what that gas pump or soda machine that you have in the
+                garage
+                or
+                that you're neighbor is trying to sell you is worth.<br>
+                It's impossible for me to inspect, look at, visualize or otherwise peruse these pieces from
+                thousands of
+                miles away in order to give you an accurate<br> valuation.</strong><br>
+            <small>Bob's Easy Payment Terms: 50% deposit buys the gas pump and begins the build (restoration). The
+                balance
+                is due when it's complete. Build time varies. Credit cards<br>
+                preferred but we also take money orders, bank wire transfers and cash.
+            </small>
+            <br><br><strong>ALWAYS BUYING OLD GAS PUMPS AND SODA MACHINES</strong></p>
 
-</form>
-<section>
-    <p class="two"><strong>Sorry, but I have no idea what that gas pump or soda machine that you have in the garage or
-            that you're neighbor is trying to sell you is worth.<br>
-            It's impossible for me to inspect, look at, visualize or otherwise peruse these pieces from thousands of
-            miles away in order to give you an accurate<br> valuation.</strong><br>
-        <small>Bob's Easy Payment Terms: 50% deposit buys the gas pump and begins the build (restoration). The balance
-            is due when it's complete. Build time varies. Credit cards<br>
-            preferred but we also take money orders, bank wire transfers and cash.
-        </small>
-        <br><br><strong>ALWAYS BUYING OLD GAS PUMPS AND SODA MACHINES</strong></p>
-
-    <article>
-        <form method="post">
+        <article>
             <fieldset>
                 <legend>Personal details</legend>
                 <label for='name'>Name</label><br/>
@@ -118,15 +127,16 @@ if (isset($_POST["checkout"])) {
                 <span id='map'><img src="NANP.png" width=15 height=15></span><br>
             </fieldset>
             <fieldset>
-                <legend>checkme</legend>
-
+                <legend>checkMe</legend>
                 <input type="checkbox" name="remember me" value="RM" id="rememberMe" onclick="storeIfo()"> Remember
                 me<br>
                 <input type="submit" name="checkout" value="check out"/>
             </fieldset>
-        </form>
-    </article>
-</section>
+        </article>
+    </section>
+</form>
+
+
 <aside>
     <p class="two"><strong><a href="photo/cgp.html">Custom pump work </a>done on request.<br>
             Good selection of unrestored pumps available
@@ -136,7 +146,7 @@ if (isset($_POST["checkout"])) {
 
 
 <?php include_once("end-part.php"); ?>
-        
-        
-        
+
+
+
 

@@ -48,14 +48,18 @@ function preFilled() {
     document.getElementById('tel').value = window.localStorage.getItem('tel');
 }
 
-/*function change()
-{
-    if(document.getElementById("GP8002").value=="Add to cart")
-    {
-document.getElementById("GP8002").value="Remove from cart";
+let $count = 0;
+
+function addItem() {
+    $count++;
+    document.getElementById('result').innerHTML = $count + " in the cart.";
+    window.localStorage.itemNum = $count;
 }
-else if(document.getElementById("GP8002").value=="Remove from cart")
-{
-    document.getElementById("GP8002").value="Add to cart";
+
+function removeItem() {
+    if($count > 0){
+        $count--;
+    }
+    document.getElementById('result').innerText = $count + " in the cart.";
+    window.localStorage.itemNum = $count;
 }
-}*/

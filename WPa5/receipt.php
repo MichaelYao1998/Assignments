@@ -1,5 +1,4 @@
-<?php
-include("top-part.php");
+<?php include("top-part.php");
 $information = $_SESSION["information"];
 $cart = $_SESSION["cart"];
 
@@ -29,15 +28,20 @@ unset($_SESSION["cart"]);
     <img src="photo/group.png" align="middle" height="300" width="400"/>
     <p class=four>contact : 4140 JVL Industrial Park Dr. #102, Marietta, GA 30066 (Just off I-575)
         678-494-2996 M-F 10 - 4 Sat by appointment Bob@Bobs-Garage.com</p>
+
     <h4>Name</h4>
 <?php echo $information['name']; ?>
+
     <h4>Email</h4>
 <?php echo $information['email']; ?>
+
     <h4>Address</h4>
 <?php echo $information['address']; ?>
+
     <h4>Telephone</h4>
 <?php echo $information['telephone']; ?>
-    <h4>order</h4>
+
+    <h4>Order</h4>
 <?php foreach ($cart as $key => $pump) {
     $total += $pump['price'];
     echo "{$pump['id']}" . "<br>";
@@ -45,7 +49,7 @@ unset($_SESSION["cart"]);
     echo 'price:' . "{$pump['price']}" . "<br>";;
 
 } ?>
+
     <h4>Total</h4>
-    $<?php
-echo number_format((float)$total, 2, '.', ''); ?>
+    $<?php echo number_format((float)$total, 2, '.', ''); ?>
 <?php include("end-part.php"); ?>
