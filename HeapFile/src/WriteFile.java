@@ -61,7 +61,7 @@ public class WriteFile {
         System.arraycopy(content, 0, data, dataOffset, content.length);
     }
 
-        //creating dataset and apply the offset when necessary
+        //creating dataset/record and apply the offset when necessary
     public byte[] dataset(byte[] data, String[] words, int extraPage) {
         byte[] dID = intToByteArr(extraPage);
         System.arraycopy(dID,0,data,0,dID.length);
@@ -76,9 +76,9 @@ public class WriteFile {
         createByteArr(words[8],15,225,data);
         createByteArr(words[9],30,240,data);
         createByteArr(words[10],30,270,data);
-        createByteArr(words[11],30,280,data);
-        createByteArr(words[12],15,330,data);
-        createByteArr(words[13],15,345,data);
+        createByteArr(words[11],30,270,data);
+        createByteArr(words[12],15,271,data);
+        createByteArr(words[13],15,272,data);
         return data;
     }
 

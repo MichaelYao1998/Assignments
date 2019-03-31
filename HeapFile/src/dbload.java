@@ -32,9 +32,9 @@ public class dbload {
 
         // Calculate the time to create heap file
         long beginTime = System.currentTimeMillis();
-        writeFile.WriteToFile(fileName,heapFile,pageSize);
+        writeFile.WriteToFile(fileName, heapFile, pageSize);
         long endTime = System.currentTimeMillis();
-        System.out.println("Time used to create file is: "+(endTime-beginTime));
+        System.out.println("Time used to create file is: " + (endTime - beginTime) + "ms");
 
 
     }
