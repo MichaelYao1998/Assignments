@@ -11,7 +11,7 @@ public class dbload {
 
         //Check second command line parameters
         String pageSizeStr = args[1];
-        int pageSize;
+        int pageSize = 0;
         try {
             pageSize = Integer.parseInt(pageSizeStr);
             if (pageSize == 0) {
@@ -30,18 +30,9 @@ public class dbload {
         }
         String heapFile = "heap." + pageSizeStr;
 
-        //number of records loaded
-        try {
-            System.out.println("Number of records loaded: " + writeFile.count(fileName));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        //number of pages used
-
         // Calculate the time to create heap file
         long beginTime = System.currentTimeMillis();
-        writeFile.WriteToFile(fileName,heapFile);
+        writeFile.WriteToFile(fileName,heapFile,pageSize);
         long endTime = System.currentTimeMillis();
         System.out.println("Time used to create file is: "+(endTime-beginTime));
 
