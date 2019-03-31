@@ -9,11 +9,11 @@ public class WriteFile {
         int PageNumber, dataNumber;
         PageNumber = dataNumber = 0;
         int extraPage = 0;
-        FileOutputStream dos = null;
+        DataOutputStream dos = null;
         BufferedReader reader = null;
         String nextLine = "";
         try {
-            dos = new FileOutputStream(HeapFileName);
+            dos = new DataOutputStream(new FileOutputStream(HeapFileName));
             reader = new BufferedReader(new FileReader(fileName));
             String line;
             line = reader.readLine();
@@ -21,7 +21,7 @@ public class WriteFile {
                 String[] words = line.split(",", -1);
                 data = dataset(data, words, extraPage);
                 extraPage++;
-                dos.write(data);
+                dos.writeBytes(String.valueOf(data));
                 if ((extraPage + 1) * 300 > pageSize) {
                     extraPage = 0;
                     PageNumber++;
