@@ -38,9 +38,9 @@ public class WriteFile {
                 try {
                     if ((nextLine = reader.readLine()) == null) {
                         PageNumber++;
-                        dos.close();
-                        reader.close();
                     }
+                    dos.close();
+                    reader.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -50,7 +50,7 @@ public class WriteFile {
         System.out.println("Number of records loaded: " + dataNumber);
 
     }
-    //creating a byte array and append to dataset to the correct offset position
+    //creating a byte array and append them to dataset to the correct offset position
 
     public void createByteArr(String words, int size, int dataOffset, byte[] data) {
         byte[] content = new byte[size];
