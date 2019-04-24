@@ -8,24 +8,28 @@ public class WriteFile {
        And it will also calculate the pages it need and numbers of records it loaded.
      */
     public void WriteToFile(String fileName, String HeapFileName, int pageSize) {
-        byte[] data = new byte[300];
+        byte[] data = new byte[326];
         int PageNumber, dataNumber;
         PageNumber = dataNumber = 0;
         int extraPage = 0;
+        int RECORD_SIZE = 326;
         DataOutputStream dos = null;
         BufferedReader reader = null;
         String nextLine = "";
         try {
             dos = new DataOutputStream(new FileOutputStream(HeapFileName));
             reader = new BufferedReader(new FileReader(fileName));
-            String line;
-            line = reader.readLine();
+            String line = "";
+//            line = reader.readLine();
             while ((line = reader.readLine()) != null) {
                 String[] words = line.split(",", -1);
                 data = dataset(data, words, extraPage);
                 extraPage++;
-                dos.writeBytes(String.valueOf(data));
-                if ((extraPage + 1) * 300 > pageSize) {
+//                dos.writeBytes(String.valueOf(data));
+                dos.write(data);
+                if ((extraPage + 1) * RECORD_SIZE > pageSize) {
+                    eofByteAddOn(dos,pageSize,extraPage,PageNumber);
+                    //reset counter to start new page
                     extraPage = 0;
                     PageNumber++;
                 }
@@ -40,6 +44,7 @@ public class WriteFile {
             if (reader != null) {
                 try {
                     if ((nextLine = reader.readLine()) == null) {
+                        eofByteAddOn(dos,pageSize,extraPage,PageNumber);
                         PageNumber++;
                     }
                     dos.close();
@@ -82,18 +87,24 @@ public class WriteFile {
         int BETWEEN_ST_1_SIZE =30;
         int BETWEEN_ST_2_SIZE = 30;
         int SIDE_OF_STREET_SIZE = 15;
-        int IN_VIOLATEION_SIZE = 15;
+        int IN_VIOLATION_SIZE = 15;
 
-        int DA_NAME_OFFSET = DA_NAME_SIZE;
-        int DEVICE_ID_OFFSET = DA_NAME_SIZE + DEVICE_ID_SIZE;
-        int ARRIVAL_TIME_OFFSET = DEVICE_ID_OFFSET + ARRIVAL_TIME_SIZE;
-        int DEPARTURE_TIME_OFFSET = ARRIVAL_TIME_OFFSET + DEPARTURE_TIME_SIZE;
-        int DURATION_SECONDS_OFFSET = DEPARTURE_TIME_OFFSET + DURATION_SECONDS_SIZE;
-        int STREET_MARKER_OFFSET = DURATION_SECONDS_OFFSET + STREET_MARKER_SIZE;
-        int SIGN_OFFSET = STREET_MARKER_OFFSET + SIGN_SIZE;
-        int AREA_OFFSET = SIGN_OFFSET + AREA_SIZE;
-        int STREET_ID_OFFSET = AREA_OFFSET + STREET_ID_SIZE;
-        int STREET_NAME_OFFSET = STREET_ID_OFFSET + STREET_NAME_SIZE;
+
+        int DA_NAME_OFFSET = 26;
+        int DEVICE_ID_OFFSET = DA_NAME_OFFSET + DA_NAME_SIZE;
+        int ARRIVAL_TIME_OFFSET = DEVICE_ID_OFFSET + DEVICE_ID_SIZE;
+        int DEPARTURE_TIME_OFFSET = ARRIVAL_TIME_OFFSET + ARRIVAL_TIME_SIZE;
+        int DURATION_SECONDS_OFFSET = DEPARTURE_TIME_OFFSET + DEPARTURE_TIME_SIZE;
+        int STREET_MARKER_OFFSET = DURATION_SECONDS_OFFSET + DURATION_SECONDS_SIZE;
+        int SIGN_OFFSET = STREET_MARKER_OFFSET + STREET_MARKER_SIZE;
+        int AREA_OFFSET = SIGN_OFFSET + SIGN_SIZE;
+        int STREET_ID_OFFSET = AREA_OFFSET + AREA_SIZE;
+        int STREET_NAME_OFFSET = STREET_ID_OFFSET + STREET_ID_SIZE;
+        int BETWEEN_ST_1_OFFSET = STREET_NAME_OFFSET + STREET_NAME_SIZE;
+        int BETWEEN_ST_2_OFFSET = BETWEEN_ST_1_OFFSET + BETWEEN_ST_1_SIZE;
+        int SIDE_OF_STREET_OFFSET = BETWEEN_ST_2_OFFSET + BETWEEN_ST_2_SIZE;
+        int IN_VIOLATION_OFFSET = SIDE_OF_STREET_OFFSET + SIDE_OF_STREET_SIZE;
+
 
         System.arraycopy(dID, 0, data, 0, dID.length);
         createByteArr(words[0], DA_NAME_SIZE, DA_NAME_OFFSET, data);
@@ -109,7 +120,7 @@ public class WriteFile {
         createByteArr(words[10], BETWEEN_ST_1_SIZE , 269, data);
         createByteArr(words[11], BETWEEN_ST_2_SIZE, 270, data);
         createByteArr(words[12], SIDE_OF_STREET_SIZE, 271, data);
-        createByteArr(words[13], IN_VIOLATEION_SIZE, 272, data);
+        createByteArr(words[13], IN_VIOLATION_SIZE, 272, data);
         return data;
     }
 
@@ -118,5 +129,13 @@ public class WriteFile {
         ByteBuffer buffer = ByteBuffer.allocate(4);
         buffer.putInt(i);
         return buffer.array();
+    }
+
+    public void eofByteAddOn(DataOutputStream dos, int pSize, int out, int pCount)throws IOException{
+        int RECORD_SIZE = 326;
+        byte[] fPadding = new byte[pSize-(RECORD_SIZE*out)-4];
+        byte[] bPageNum = intToByteArr(pCount);
+        dos.write(fPadding);
+        dos.write(bPageNum);
     }
 }

@@ -1,100 +1,136 @@
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class dbquery {
-    public static void main(String[] args) {
+    public static void main(String args[])
+    {
+        dbquery load = new dbquery();
 
-        // Check command line parameters
-        if (args.length != 4) {
-            System.out.println("Do not have correct numbers of parameters");
-            return;
-        }
-
-        //Check whether the file existed
-        String[] text = new String[3];
-        text[0] = args[0];
-        text[1] = args[1];
-        text[2] = args[2];
-//        String text = args[0];
-        if (text[0] == null) {
-            System.out.println("Please input the searching text");
-            return;
-        }
-
-
-        //Check second command line parameters
-        String pageSizeStr = args[3];
-        int pageSize = 0;
-        try {
-            pageSize = Integer.parseInt(pageSizeStr);
-            if (pageSize == 0) {
-                System.out.println("Please specify the page size");
-                return;
-            }
-        } catch (Exception e) {
-            System.out.println("page size must be an integer.");
-            return;
-        }
-        String heapFileName = "heap." + pageSizeStr;
-
-        // Calculate the time to create heap file
-        long beginTime = System.currentTimeMillis();
-        textSearch(String.valueOf(text), heapFileName, pageSize);
+        // calculate query time
+        long startTime = System.currentTimeMillis();
+        load.readArguments(args);
         long endTime = System.currentTimeMillis();
-        System.out.println("Time used to search the text is: " + (endTime - beginTime) + "ms");
 
-
+        System.out.println("Query time: " + (endTime - startTime) + "ms");
     }
 
-    public static void textSearch(String text, String filename, int pageSize) {
-        FileInputStream fis = null;
-        boolean hasNextPage = true;
-        boolean hasData=true;
-        int dID = 0;
-        int dataLength = 0;
-        int pageCount = 0;
-        int dataCount = 0;
-        try {
-            fis = new FileInputStream(filename);
-            while (hasNextPage) {
-                byte[] page = new byte[pageSize];
-                byte[] number = new byte[4];
-                fis.read(page, 0, pageSize);
-                System.arraycopy(page, page.length - 4, number, 0, 4);
-                hasData = true;
 
-                while (hasData) {
-                    byte[] data = new byte[315];
-                    byte[] dataArr = new byte[4];
-                    System.arraycopy(page, dataLength, data, 0, 315);
-                    System.arraycopy(data, 0, dataArr, 0, 4);
-                    dID = ByteBuffer.wrap(dataArr).getInt();
-                    if (dID != dataCount) {
-                        hasData = false;
-                    }else{
-                        displayText(text, data);
+    // reading command line arguments
+    public void readArguments(String args[])
+    {
+        if (args.length == 2)
+        {
+            if (isInteger(args[1]))
+            {
+                readHeap(args[0], Integer.parseInt(args[1]));
+            }
+        }
+        else
+        {
+            System.out.println("Error: only pass in two arguments");
+        }
+    }
+
+    // check if pagesize is a valid integer
+    public boolean isInteger(String s)
+    {
+        boolean isValidInt = false;
+        try
+        {
+            Integer.parseInt(s);
+            isValidInt = true;
+        }
+        catch (NumberFormatException e)
+        {
+            e.printStackTrace();
+        }
+        return isValidInt;
+    }
+
+    // read heapfile by page
+    public void readHeap(String name, int pagesize)
+    {
+        final String HEAP_FNAME = "heap.";
+        File heapfile = new File(HEAP_FNAME + pagesize);
+        int intSize = 4;
+        int pageCount = 0;
+        int recCount = 0;
+        int recordLen = 0;
+        int rid = 0;
+        boolean isNextPage = true;
+        boolean isNextRecord = true;
+        try
+        {
+            FileInputStream fis = new FileInputStream(heapfile);
+            // reading page by page
+            while (isNextPage)
+            {
+                byte[] bPage = new byte[pagesize];
+                byte[] bPageNum = new byte[intSize];
+                fis.read(bPage, 0, pagesize);
+                System.arraycopy(bPage, bPage.length-intSize, bPageNum, 0, intSize);
+
+                // reading by record, return true to read the next record
+                isNextRecord = true;
+                while (isNextRecord)
+                {
+                    byte[] bRecord = new byte[326];
+                    byte[] bRid = new byte[intSize];
+                    try
+                    {
+                        System.arraycopy(bPage, recordLen, bRecord, 0, 326);
+                        System.arraycopy(bRecord, 0, bRid, 0, intSize);
+                        rid = ByteBuffer.wrap(bRid).getInt();
+                        if (rid != recCount)
+                        {
+                            isNextRecord = false;
+                        }
+                        else
+                        {
+                            displayText(name,bRecord);
+                            recordLen += 326;
+                        }
+                        recCount++;
+                        // if recordLen exceeds pagesize, catch this to reset to next page
                     }
-                    dataCount++;
+                    catch (ArrayIndexOutOfBoundsException e)
+                    {
+                        isNextRecord = false;
+                        recordLen = 0;
+                        recCount = 0;
+                        rid = 0;
+                    }
                 }
-                if ((ByteBuffer.wrap(number).getInt()) != dataCount) {
-                    hasNextPage = false;
+                // check to complete all pages
+                if (ByteBuffer.wrap(bPageNum).getInt() != pageCount)
+                {
+                    isNextPage = false;
                 }
                 pageCount++;
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("file: " + filename + " does not exist");
-        } catch (IOException e) {
+        }
+        catch (FileNotFoundException e)
+        {
+            System.out.println("File: " + HEAP_FNAME + pagesize + " not found.");
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
         }
     }
 
+    //Display the text to the stdout
     public static void displayText(String text, byte[] data) {
         String record = new String(data);
-//        String DA_NAME = record.substring(0,100);
-        if (record.contains(text)) {
+        int DA_NAME_OFFSET = 26;
+        int DA_NAME_SIZE = 40;
+        String DA_NAME = record.substring(DA_NAME_OFFSET, DA_NAME_OFFSET + DA_NAME_SIZE);
+        if (DA_NAME.toLowerCase().contains(text.toLowerCase())) {
             System.out.println(record);
         }
     }
 }
+

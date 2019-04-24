@@ -20,7 +20,7 @@ public class dbload {
             }
         } catch (Exception e) {
             System.out.println("page size must be an integer.");
-            return;
+	    return;
         }
 
         //Check whether the file existed
